@@ -5,6 +5,7 @@
 
 import sys
 import re
+import os
 import os.path
 
 def getExtension(filename):
@@ -29,6 +30,15 @@ def getImageType(filename):
 		imageType = None
 
 	return imageType
+
+def renameFile(src, dst, fixName):
+	#
+	if os.path.exists(dst):
+		print("Can't rename {} because {} already exists".format(src, dst))
+	else:
+		print("Rename {} to {}".format(src, dst))
+		if fixName:
+			os.rename(src, dst)
 	
 def main(args):
 	#
@@ -46,17 +56,17 @@ def main(args):
 				if result != None:
 					filePrefix, fileExt = result.groups()
 					fileExtLower = fileExt.lower()
-					#
+					
 					if ((fileExtLower in ('jpg', 'jpeg')) and (imageType == 'png')) or ((fileExtLower == 'png') and (imageType == 'jpg')) :
 						# file is named incorrectly
-						print("Rename {} to {}.{}".format(f, filePrefix, imageType))
+						renameFile(f, "{}.{}".format(filePrefix, imageType), renameFiles)
 					else:
 						# file is named correclty or filename has a different extension--no action is required
 						print("{} is ok".format(f))
 				else:
 					if imageType == 'jpg' or imageType == 'png':
 						# file lacks an appropriate extension
-						print("Rename {} to {}.{}".format(f, f, imageType))
+						renameFile(f, "{}.{}".format(f, imageType), renameFiles)
 					else:
 						print("{} doesn't have an extension and isn't a jpeg or a png".format(f))
 			else:
