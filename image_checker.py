@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+#
+# Correct file extensions for jpeg and png files
+#
 
 import sys
 import re
